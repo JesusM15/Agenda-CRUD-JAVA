@@ -31,6 +31,10 @@ public class TelefonoDAO {
     }
 
     public void registrarTelefono(Telefono telefono){
+        if (!Telefono.esValido(telefono.getNumero())) {
+            throw new IllegalArgumentException("El formato del teléfono es inválido.");
+        }
+
         String sql = "INSERT INTO telefonos(telefono, personaId) VALUES (?, ?)";
 
         try (Connection connection = database.conectar()){
@@ -50,6 +54,9 @@ public class TelefonoDAO {
     }
 
     public void modificarTelefono(Telefono telefono){
+        if (!Telefono.esValido(telefono.getNumero())) {
+            throw new IllegalArgumentException("El formato del teléfono es inválido.");
+        }
         String sql = "UPDATE telefonos SET telefono = ? WHERE id = ?";
 
         try (Connection connection = database.conectar()){

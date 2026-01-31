@@ -76,6 +76,12 @@ public class TelefonosController {
             }
         });
 
+        txtTelefono.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(!newValue.matches("\\d*") || newValue.length() > 10){
+                txtTelefono.setText(oldValue);
+            }
+        });
+
         tablaTelefonos.setItems(listaTelefonos);
     }
 
@@ -89,28 +95,44 @@ public class TelefonosController {
         btnCancelar.setManaged(true);
     }
 
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
     @FXML
     protected void onGuardarTelefonoClick() {
         String numero = txtTelefono.getText();
+
+        if (!Telefono.esValido(numero)) {
+            mostrarAlerta("Dato Inválido", "Asegúrate de ingresar solo números (máx. 10).");
+            return;
+        }
         if (numero.isEmpty()) return;
 
         TelefonoDAO dao = new TelefonoDAO();
+        try {
+            if (telefonoEnEdicion == null) {
+                Telefono nuevo = new Telefono(-1, numero, persona.getId());
+                dao.registrarTelefono(nuevo);
+                listaTelefonos.add(nuevo);
+            } else {
+                String numeroAnterior = telefonoEnEdicion.getNumero();
+                Telefono tmp = new Telefono(telefonoEnEdicion.getIdTelefono(), numero, persona.getId());
+                dao.modificarTelefono(tmp);
 
-        if (telefonoEnEdicion == null) {
-            Telefono nuevo = new Telefono(-1, numero, persona.getId());
-            dao.registrarTelefono(nuevo);
-            listaTelefonos.add(nuevo);
+                telefonoEnEdicion.setNumero(numero);
 
-        } else {
-            telefonoEnEdicion.setNumero(numero);
-
-            dao.modificarTelefono(telefonoEnEdicion);
-            tablaTelefonos.refresh();
-
-            resetearFormulario();
+                tablaTelefonos.refresh();
+                resetearFormulario();
+            }
+            txtTelefono.clear();
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta("Error de Validación", e.getMessage());
         }
-
-        txtTelefono.clear();
     }
 
     private void onEliminarTelefono(Telefono t) {

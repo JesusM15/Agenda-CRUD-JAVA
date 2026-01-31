@@ -39,4 +39,9 @@ public class Telefono {
     public void setNumero(String numero) {
         this.numero = numero;
     }
+
+    public static boolean esValido(String numero) {
+        if (numero == null) return false;
+        return numero.matches("\\d{1,10}");
+    }
 }
