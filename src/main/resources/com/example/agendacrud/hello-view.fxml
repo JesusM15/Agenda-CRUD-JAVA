@@ -46,9 +46,7 @@
       <TableColumn fx:id="colId" maxWidth="60.0" minWidth="50.0" prefWidth="55.0" text="ID" />
       <TableColumn fx:id="colNombre" minWidth="150.0" prefWidth="250.0" text="Nombre del Contacto" />
 
-      <TableColumn fx:id="colDireccion" minWidth="150.0" prefWidth="250.0" text="Dirección" />
-
-      <TableColumn fx:id="colAcciones" maxWidth="200.0" minWidth="150.0" prefWidth="180.0" text="Gestión" />
+      <TableColumn fx:id="colAcciones" maxWidth="250.0" minWidth="200.0" prefWidth="180.0" text="Gestión" />
     </columns>
     <columnResizePolicy>
       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

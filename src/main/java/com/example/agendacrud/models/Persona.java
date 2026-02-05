@@ -1,28 +1,31 @@
 package com.example.agendacrud.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Persona {
     private int id;
     private String nombre;
-    private String direccion;
+    private List<Direccion> direcciones;
 
-    public String getDireccion() {
-        return direccion;
+    public List<Direccion> getDirecciones() {
+        return direcciones;
     }
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 
     public Persona() {
         this.id = -1;
         this.nombre = null;
-        this.direccion = null;
-    }
+        this.direcciones = new ArrayList<>(); // Inicializamos la lista vacía
+   }
 
-    public Persona(int id, String nombre, String direccion) {
+    public Persona(int id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-        this.direccion = direccion;
+        this.direcciones = new ArrayList<>();
     }
 
     public int getId() {

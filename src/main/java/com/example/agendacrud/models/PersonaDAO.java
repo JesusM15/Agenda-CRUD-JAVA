@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PersonaDAO {
     public ArrayList<Persona> consultarPersonas(){
-        String sql = "SELECT DISTINCT p.id, p.nombre, p.direccion FROM personas p";
+        String sql = "SELECT DISTINCT p.id, p.nombre FROM personas p";
         ArrayList<Persona> result = new ArrayList<Persona>();
 
         try (Connection conn = database.conectar()){
@@ -18,7 +18,7 @@ public class PersonaDAO {
             ResultSet rs = smt.executeQuery(sql);
 
             while (rs.next()) {
-                Persona persona = new Persona(rs.getInt("id"), rs.getString("nombre"), rs.getString("direccion"));
+                Persona persona = new Persona(rs.getInt("id"), rs.getString("nombre"));
                 result.add(persona);
                 System.out.println("ID: " + rs.getInt("id") + " Nombre: " + rs.getString("nombre"));
             }
@@ -31,12 +31,11 @@ public class PersonaDAO {
     }
 
     public void crearPersona(Persona persona){
-        String sql = "INSERT INTO personas (nombre, direccion) VALUES (?, ?)";
+        String sql = "INSERT INTO personas (nombre) VALUES (?)";
 
         try (Connection conn = database.conectar()) {
             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // preparedStatement cuando se usan parametros.
             preparedStatement.setString(1, persona.getNombre()); // indice del parametro + valor.
-            preparedStatement.setString(2, persona.getDireccion());
             preparedStatement.executeUpdate();
 
             ResultSet rs = preparedStatement.getGeneratedKeys();
@@ -63,13 +62,12 @@ public class PersonaDAO {
     }
 
     public void editarPersona(Persona persona){
-        String sql = "UPDATE personas SET nombre = ?, direccion = ? WHERE id = ?";
+        String sql = "UPDATE personas SET nombre = ? WHERE id = ?";
 
         try (Connection connection = database.conectar()){
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, persona.getNombre());
-            preparedStatement.setString(2, persona.getDireccion());
-            preparedStatement.setInt(3, persona.getId());
+            preparedStatement.setInt(2, persona.getId());
 
             preparedStatement.executeUpdate();
         } catch(SQLException e){
