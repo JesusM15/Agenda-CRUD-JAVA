@@ -36,7 +36,6 @@ public class HelloController {
     @FXML private TableColumn<Persona, Void> colAcciones;
 
     @FXML private TextField txtNombre;
-    @FXML private TextField txtDireccion;
 
     private ObservableList<Persona> listaPersonas = FXCollections.observableArrayList();
 
@@ -189,7 +188,6 @@ public class HelloController {
     @FXML
     protected void onGuardarClick() {
         String nom = txtNombre.getText();
-        String dir = txtDireccion.getText();
 
         if (nom.isEmpty()) return;
 
@@ -212,9 +210,10 @@ public class HelloController {
 
             btnGuardar.setText("Crear Contacto");
             btnGuardar.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
+            btnCancelar.setVisible(false);
+            btnCancelar.setManaged(false);
         }
         txtNombre.clear();
-        txtDireccion.clear();
     }
 
     @FXML
@@ -226,7 +225,6 @@ public class HelloController {
         personaEnEdicion = null;
 
         txtNombre.clear();
-        txtDireccion.clear();
 
         btnGuardar.setText("Crear Contacto");
         btnGuardar.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");

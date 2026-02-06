@@ -28,7 +28,7 @@
   <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
     <children>
       <TextField fx:id="txtNombre" promptText="Nombre completo" HBox.hgrow="ALWAYS" />
-      <TextField fx:id="txtDireccion" promptText="Dirección (Calle, Ciudad...)" HBox.hgrow="ALWAYS" />
+<!--      <TextField fx:id="txtDireccion" promptText="Dirección (Calle, Ciudad...)" HBox.hgrow="ALWAYS" />-->
       <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#onGuardarClick" prefWidth="130.0"
               style="-fx-background-color: #27ae60; -fx-cursor: hand;" text="Crear Contacto" textFill="WHITE">
         <font>
