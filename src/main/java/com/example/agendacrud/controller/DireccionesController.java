@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javax.swing.*;
 import java.util.List;
 
 public class DireccionesController {
@@ -48,9 +49,10 @@ public class DireccionesController {
 
     private void configurarColumnaAcciones() {
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEliminar = new Button();
+            private final Button btnDesvincular = new Button();
             private final Button btnEditar = new Button();
-            private final HBox container = new HBox(10, btnEditar, btnEliminar);
+            private final Button btnEliminar = new Button();
+            private final HBox container = new HBox(10, btnEditar, btnDesvincular, btnEliminar);
 
             {
                 FontIcon iconEdit = new FontIcon(FontAwesomeSolid.PENCIL_ALT);
@@ -58,13 +60,20 @@ public class DireccionesController {
                 btnEditar.setGraphic(iconEdit);
                 btnEditar.setStyle("-fx-background-color: #f39c12; -fx-cursor: hand;");
 
+                FontIcon iconUnlink = new FontIcon(FontAwesomeSolid.UNLINK);
+                iconUnlink.setIconColor(Color.WHITE);
+                btnDesvincular.setGraphic(iconUnlink);
+                btnDesvincular.setStyle("-fx-background-color: #3498db; -fx-cursor: hand;");
+
                 FontIcon iconTrash = new FontIcon(FontAwesomeSolid.TRASH_ALT);
                 iconTrash.setIconColor(Color.WHITE);
                 btnEliminar.setGraphic(iconTrash);
-                btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-cursor: hand;");
+                btnEliminar.setStyle("-fx-background-color: red ; -fx-cursor: hand;");
 
                 btnEditar.setOnAction(e -> prepararEdicion(getTableView().getItems().get(getIndex())));
-                btnEliminar.setOnAction(e -> eliminarRelacion(getTableView().getItems().get(getIndex())));
+                btnDesvincular.setOnAction(e -> eliminarRelacion(getTableView().getItems().get(getIndex())));
+
+                btnEliminar.setOnAction(e -> eliminarDireccion(getTableView().getItems().get(getIndex())));
 
                 container.setAlignment(Pos.CENTER);
             }
@@ -104,9 +113,11 @@ public class DireccionesController {
 
         for (Direccion d : todasLasDireccionesDB) {
             if (d.getDireccion().equals(seleccion)) {
-                dao.vincularDireccion(d, personaActual);
-                
-                // deberia trabajar en ver como desvincular una direccion de una persona.
+                boolean status = dao.vincularDireccion(d, personaActual);
+                if(!status){
+                    JOptionPane.showMessageDialog(null, "" +
+                            "Esta dirección ya esta vinculada con el usuario", "Alerta", JOptionPane.INFORMATION_MESSAGE);
+                }
                 break;
             }
         }
@@ -124,9 +135,10 @@ public class DireccionesController {
             boolean status = dao.crearDireccion(nueva);
             dao.vincularDireccion(nueva, personaActual);
         } else {
-            Direccion tmp = new Direccion(direccionEnEdicion.getId(), direccionEnEdicion.getDireccion());
+            Direccion tmp = new Direccion(direccionEnEdicion.getId(), texto);
             boolean status = dao.editarDireccion(tmp);
             if(!status){
+                JOptionPane.showMessageDialog(null, "Esta direccion ya existe", "Alerta", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             direccionEnEdicion.setDireccion(texto);
@@ -147,8 +159,12 @@ public class DireccionesController {
     }
 
     private void eliminarRelacion(Direccion d) {
-        // IMPORTANTE: Aquí solo borramos la relación en la tabla intermedia
-//        dao.desasociarPersonaDireccion(personaActual.getId(), d.getId());
+        dao.desvincularDireccion(d, personaActual);
+        refrescarTablaYPersona();
+    }
+
+    private void eliminarDireccion(Direccion d){
+        dao.eliminarDireccion(d);
         refrescarTablaYPersona();
     }
 

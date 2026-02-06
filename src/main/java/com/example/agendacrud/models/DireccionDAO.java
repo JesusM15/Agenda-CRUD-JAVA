@@ -90,6 +90,38 @@ public class DireccionDAO {
         return false;
     }
 
+    public boolean desvincularDireccion(Direccion direccion, Persona persona) {
+        String sql = "DELETE FROM persona_direccion WHERE persona_id = ? AND direccion_id = ?";
+
+        try (Connection conn = database.conectar()){
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, persona.getId());
+            preparedStatement.setInt(2, direccion.getId());
+
+            preparedStatement.executeUpdate();
+            return true;
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean eliminarDireccion(Direccion d){
+        String sql = "DELETE FROM direcciones WHERE id = ?";
+
+        try (Connection conn = database.conectar()){
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, d.getId());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public boolean editarDireccion(Direccion direccion){
         String sql = "UPDATE direcciones SET direccion = ? WHERE id = ?";
 
