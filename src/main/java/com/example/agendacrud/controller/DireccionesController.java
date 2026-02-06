@@ -3,6 +3,7 @@ package com.example.agendacrud.controller;
 import com.example.agendacrud.models.Direccion;
 import com.example.agendacrud.models.DireccionDAO;
 import com.example.agendacrud.models.Persona;
+import com.example.agendacrud.models.Telefono;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -104,6 +105,7 @@ public class DireccionesController {
         for (Direccion d : todasLasDireccionesDB) {
             if (d.getDireccion().equals(seleccion)) {
                 dao.vincularDireccion(d, personaActual);
+                
                 // deberia trabajar en ver como desvincular una direccion de una persona.
                 break;
             }
@@ -118,12 +120,15 @@ public class DireccionesController {
         if (texto.isEmpty()) return;
 
         if (direccionEnEdicion == null) {
-            // Caso: Crear Nueva
             Direccion nueva = new Direccion(-1, texto);
-//            boolean id = dao.crearDireccion(nueva);
-//            dao.asociarPersonaConDireccion(personaActual.getId(), id);
+            boolean status = dao.crearDireccion(nueva);
+            dao.vincularDireccion(nueva, personaActual);
         } else {
-            // Caso: Editar Existente
+            Direccion tmp = new Direccion(direccionEnEdicion.getId(), direccionEnEdicion.getDireccion());
+            boolean status = dao.editarDireccion(tmp);
+            if(!status){
+                return;
+            }
             direccionEnEdicion.setDireccion(texto);
 //            dao.editarDireccion(direccionEnEdicion);
         }

@@ -74,7 +74,7 @@ public class DireccionDAO {
     }
 
     public boolean vincularDireccion(Direccion direccion, Persona persona) {
-        String sql = "INSERT INTO persona_direccion (persona_id, direccion_id) VALUES (?) (?)";
+        String sql = "INSERT INTO persona_direccion (persona_id, direccion_id) VALUES (?, ?)";
 
         try (Connection conn = database.conectar()){
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -89,6 +89,23 @@ public class DireccionDAO {
 
         return false;
     }
-    
+
+    public boolean editarDireccion(Direccion direccion){
+        String sql = "UPDATE direcciones SET direccion = ? WHERE id = ?";
+
+        try (Connection conn = database.conectar()){
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, direccion.getDireccion());
+            preparedStatement.setInt(2, direccion.getId());
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
 
 }
