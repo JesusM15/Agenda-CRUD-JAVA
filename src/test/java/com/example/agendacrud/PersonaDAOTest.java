@@ -11,7 +11,7 @@ public class PersonaDAOTest {
     @Test
     void crearPersona() {
         PersonaDAO dao = new PersonaDAO();
-        Persona p = new Persona(-1, "Juan Test", "Calle 1");
+        Persona p = new Persona(-1, "Juan Test");
 
         dao.crearPersona(p);
 
@@ -24,7 +24,7 @@ public class PersonaDAOTest {
     void editarPersona() {
         PersonaDAO dao = new PersonaDAO();
 
-        Persona p = new Persona(-1, "Original", "Direccion");
+        Persona p = new Persona(-1, "Original");
         dao.crearPersona(p);
 
         p.setNombre("Editado");
@@ -41,7 +41,7 @@ public class PersonaDAOTest {
     @Test
     void consultarPersonas() {
         PersonaDAO dao = new PersonaDAO();
-        Persona p = new Persona(-1, "Consultar Test", "Direccion");
+        Persona p = new Persona(-1, "Consultar Test");
         dao.crearPersona(p);
 
         ArrayList<Persona> lista = dao.consultarPersonas();
@@ -56,7 +56,7 @@ public class PersonaDAOTest {
     void eliminarPersona() {
         PersonaDAO dao = new PersonaDAO();
 
-        Persona p = new Persona(-1, "A Borrar", "Direccion");
+        Persona p = new Persona(-1, "A Borrar");
         dao.crearPersona(p);
 
         dao.eliminarPersona(p.getId());

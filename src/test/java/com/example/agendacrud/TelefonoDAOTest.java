@@ -16,7 +16,7 @@ public class TelefonoDAOTest {
         PersonaDAO personaDAO = new PersonaDAO();
         TelefonoDAO telefonoDAO = new TelefonoDAO();
 
-        Persona p = new Persona(-1, "Usuario Test", "Direccion");
+        Persona p = new Persona(-1, "Usuario Test");
         personaDAO.crearPersona(p);
 
         Telefono t1 = new Telefono(-1, "111111", p.getId());
@@ -40,7 +40,7 @@ public class TelefonoDAOTest {
         PersonaDAO personaDAO = new PersonaDAO();
         TelefonoDAO telefonoDAO = new TelefonoDAO();
 
-        Persona p = new Persona(-1, "Usuario Test", "Direccion");
+        Persona p = new Persona(-1, "Usuario Test");
         personaDAO.crearPersona(p);
 
         Telefono t = new Telefono(-1, "111111", p.getId());
@@ -58,7 +58,7 @@ public class TelefonoDAOTest {
         PersonaDAO personaDAO = new PersonaDAO();
         TelefonoDAO telefonoDAO = new TelefonoDAO();
 
-        Persona p = new Persona(-1, "Usuario Test", "Direccion");
+        Persona p = new Persona(-1, "Usuario Test");
         personaDAO.crearPersona(p);
         Telefono t = new Telefono(-1, "111111", p.getId());
         telefonoDAO.registrarTelefono(t);
@@ -77,7 +77,7 @@ public class TelefonoDAOTest {
         PersonaDAO personaDAO = new PersonaDAO();
         TelefonoDAO telefonoDAO = new TelefonoDAO();
 
-        Persona p = new Persona(-1, "Test Update", "Direccion");
+        Persona p = new Persona(-1, "Test Update");
         personaDAO.crearPersona(p);
 
         Telefono t = new Telefono(-1, "1111111111", p.getId());
