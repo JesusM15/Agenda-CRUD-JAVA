@@ -1,5 +1,6 @@
 package com.example.agendacrud.controller;
 
+import com.example.agendacrud.AgendaService;
 import com.example.agendacrud.models.Persona;
 import com.example.agendacrud.models.Telefono; // Asumiendo que tienes este modelo
 import com.example.agendacrud.models.TelefonoDAO;
@@ -18,6 +19,7 @@ public class TelefonosController {
     @FXML private TextField txtTelefono;
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
+    private final AgendaService agendaService = new AgendaService();
 
     @FXML private TableView<Telefono> tablaTelefonos;
     @FXML private TableColumn<Telefono, Integer> colId;
@@ -113,18 +115,19 @@ public class TelefonosController {
         }
         if (numero.isEmpty()) return;
 
-        TelefonoDAO dao = new TelefonoDAO();
         try {
             if (telefonoEnEdicion == null) {
                 Telefono nuevo = new Telefono(-1, numero, persona.getId());
-                dao.registrarTelefono(nuevo);
-                listaTelefonos.add(nuevo);
+                if(agendaService.registrarTelefono(nuevo)){
+                    listaTelefonos.add(nuevo);
+                }
             } else {
                 String numeroAnterior = telefonoEnEdicion.getNumero();
                 Telefono tmp = new Telefono(telefonoEnEdicion.getIdTelefono(), numero, persona.getId());
-                dao.modificarTelefono(tmp);
 
-                telefonoEnEdicion.setNumero(numero);
+                if(agendaService.editarTelefono(tmp)){
+                    telefonoEnEdicion.setNumero(numero);
+                }
 
                 tablaTelefonos.refresh();
                 resetearFormulario();
@@ -136,9 +139,9 @@ public class TelefonosController {
     }
 
     private void onEliminarTelefono(Telefono t) {
-        TelefonoDAO dao = new TelefonoDAO();
-        dao.eliminarTelefono(t);
-         listaTelefonos.remove(t);
+        if(agendaService.eliminarTelefono(t.getIdTelefono())){
+            listaTelefonos.remove(t);
+        }
     }
 
     private void resetearFormulario() {
@@ -152,9 +155,7 @@ public class TelefonosController {
     }
 
     private void cargarTelefonos() {
-        TelefonoDAO dao = new TelefonoDAO();
-        listaTelefonos = FXCollections.observableArrayList(dao.obtenerTelefonosPorUsuario(persona.getId()));
-
+        listaTelefonos = FXCollections.observableArrayList(agendaService.getTelefonosPorUsuario(persona.getId()));
         tablaTelefonos.setItems(listaTelefonos);
     }
 

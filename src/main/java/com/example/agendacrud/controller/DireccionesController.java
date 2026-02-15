@@ -1,5 +1,6 @@
 package com.example.agendacrud.controller;
 
+import com.example.agendacrud.AgendaService;
 import com.example.agendacrud.models.Direccion;
 import com.example.agendacrud.models.DireccionDAO;
 import com.example.agendacrud.models.Persona;
@@ -26,6 +27,7 @@ public class DireccionesController {
     @FXML private TextField txtDireccionManual;
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
+    private final AgendaService agendaService = new AgendaService();
 
     @FXML private TableView<Direccion> tablaDirecciones;
     @FXML private TableColumn<Direccion, Integer> colId;
@@ -36,7 +38,6 @@ public class DireccionesController {
     private Direccion direccionEnEdicion = null;
     private ObservableList<Direccion> direccionesDePersona = FXCollections.observableArrayList();
     private List<Direccion> todasLasDireccionesDB;
-    private DireccionDAO dao = new DireccionDAO();
 
     @FXML
     public void initialize() {
@@ -93,14 +94,14 @@ public class DireccionesController {
     }
 
     private void refrescarTablaYPersona() {
-        List<Direccion> lista = dao.obtenerDireccionesByUserId(personaActual.getId());
+        List<Direccion> lista = agendaService.getDireccionesPorUsuario(personaActual.getId());
         personaActual.setDirecciones(lista);
         direccionesDePersona.setAll(personaActual.getDirecciones());
         tablaDirecciones.setItems(direccionesDePersona);
     }
 
     private void cargarComboGlobal() {
-        todasLasDireccionesDB = dao.obtenerDirecciones();
+        todasLasDireccionesDB = agendaService.getTodasLasDirecciones();
         ObservableList<String> items = FXCollections.observableArrayList();
         for(Direccion d : todasLasDireccionesDB) items.add(d.getDireccion());
         comboDirecciones.setItems(items);
@@ -113,7 +114,7 @@ public class DireccionesController {
 
         for (Direccion d : todasLasDireccionesDB) {
             if (d.getDireccion().equals(seleccion)) {
-                boolean status = dao.vincularDireccion(d, personaActual);
+                boolean status = agendaService.vincularDireccion(d, personaActual);
                 if(!status){
                     JOptionPane.showMessageDialog(null, "" +
                             "Esta dirección ya esta vinculada con el usuario", "Alerta", JOptionPane.INFORMATION_MESSAGE);
@@ -132,11 +133,11 @@ public class DireccionesController {
 
         if (direccionEnEdicion == null) {
             Direccion nueva = new Direccion(-1, texto);
-            boolean status = dao.crearDireccion(nueva);
-            dao.vincularDireccion(nueva, personaActual);
+            boolean status = agendaService.crearDireccion(nueva);
+            agendaService.vincularDireccion(nueva, personaActual);
         } else {
             Direccion tmp = new Direccion(direccionEnEdicion.getId(), texto);
-            boolean status = dao.editarDireccion(tmp);
+            boolean status = agendaService.actualizarDireccion(tmp);
             if(!status){
                 JOptionPane.showMessageDialog(null, "Esta direccion ya existe", "Alerta", JOptionPane.INFORMATION_MESSAGE);
                 return;
@@ -159,12 +160,12 @@ public class DireccionesController {
     }
 
     private void eliminarRelacion(Direccion d) {
-        dao.desvincularDireccion(d, personaActual);
+        agendaService.desvincularDireccion(d, personaActual);
         refrescarTablaYPersona();
     }
 
     private void eliminarDireccion(Direccion d){
-        dao.eliminarDireccion(d);
+        agendaService.eliminarDireccion(d.getId());
         refrescarTablaYPersona();
     }
 

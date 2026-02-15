@@ -1,5 +1,6 @@
 package com.example.agendacrud.controller;
 
+import com.example.agendacrud.AgendaService;
 import com.example.agendacrud.models.Persona;
 import com.example.agendacrud.models.PersonaDAO;
 import javafx.collections.FXCollections;
@@ -29,6 +30,7 @@ public class HelloController {
     private Persona personaEnEdicion = null;
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
+    private final AgendaService agendaService = new AgendaService();
 
     @FXML private TableView<Persona> tablaPersonas;
     @FXML private TableColumn<Persona, Integer> colId;
@@ -42,7 +44,6 @@ public class HelloController {
     @FXML
     protected void onHelloButtonClick(){
         PersonaDAO dao = new PersonaDAO();
-        dao.consultarPersonas();
     }
 
     @FXML
@@ -122,7 +123,7 @@ public class HelloController {
         });
 
         PersonaDAO dao = new PersonaDAO();
-        listaPersonas = FXCollections.observableArrayList(dao.consultarPersonas());
+        listaPersonas = FXCollections.observableArrayList(agendaService.obtenerTodasLasPersonas());
 
         tablaPersonas.setItems(listaPersonas);
     }
@@ -169,9 +170,9 @@ public class HelloController {
     }
 
     private void eliminarPersonaDeTablaYBase(Persona p) {
-        PersonaDAO dao = new PersonaDAO();
-        dao.eliminarPersona(p.getId());
-        listaPersonas.remove(p);
+        if(agendaService.eliminarPersona(p.getId())) {
+            listaPersonas.remove(p);
+        }
     }
 
     private void prepararEdicion(Persona p) {
@@ -191,27 +192,23 @@ public class HelloController {
 
         if (nom.isEmpty()) return;
 
-        PersonaDAO dao = new PersonaDAO();
 
         if (personaEnEdicion == null) {
             Persona nueva = new Persona(-1, nom);
-            dao.crearPersona(nueva);
-            listaPersonas.add(nueva);
+            if(agendaService.guardarPersona(nueva)) {
+                listaPersonas.add(nueva);
+            }
         } else {
             personaEnEdicion.setNombre(nom);
 /*
             personaEnEdicion.setDireccion(dir);
 */
 
-            dao.editarPersona(personaEnEdicion);
-            tablaPersonas.refresh();
+            if(agendaService.actualizarPersona(personaEnEdicion)) {
+                tablaPersonas.refresh();
+            }
 
-            personaEnEdicion = null;
-
-            btnGuardar.setText("Crear Contacto");
-            btnGuardar.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
-            btnCancelar.setVisible(false);
-            btnCancelar.setManaged(false);
+            resetearFormulario();
         }
         txtNombre.clear();
     }
