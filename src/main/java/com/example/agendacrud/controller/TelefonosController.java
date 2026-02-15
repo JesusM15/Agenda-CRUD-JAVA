@@ -1,9 +1,7 @@
 package com.example.agendacrud.controller;
 
 import com.example.agendacrud.AgendaService;
-import com.example.agendacrud.models.Persona;
-import com.example.agendacrud.models.Telefono; // Asumiendo que tienes este modelo
-import com.example.agendacrud.models.TelefonoDAO;
+import com.example.agendacrud.models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +17,7 @@ public class TelefonosController {
     @FXML private TextField txtTelefono;
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
-    private final AgendaService agendaService = new AgendaService();
+    private final AgendaService agendaService = new AgendaService(new PersonaDAO(), new TelefonoDAO(), new DireccionDAO());
 
     @FXML private TableView<Telefono> tablaTelefonos;
     @FXML private TableColumn<Telefono, Integer> colId;

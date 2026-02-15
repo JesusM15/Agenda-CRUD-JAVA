@@ -4,19 +4,16 @@ import com.example.agendacrud.models.*;
 import java.util.List;
 
 public class AgendaService {
-    // Usamos las interfaces donde existan, y clases donde no (por ahora)
     private final PersonaDAO personaDAO;
     private final TelefonoDAO telefonoDAO;
     private final DireccionDAO direccionDAO;
 
-    public AgendaService() {
-        // En una etapa más avanzada (DIP), estos se recibirían por constructor
-        this.personaDAO = new PersonaDAO();
-        this.telefonoDAO = new TelefonoDAO();
-        this.direccionDAO = new DireccionDAO();
+    public AgendaService(PersonaDAO personaDAO, TelefonoDAO telefonoDAO, DireccionDAO direccionDAO) {
+        this.personaDAO = personaDAO;
+        this.telefonoDAO = telefonoDAO;
+        this.direccionDAO = direccionDAO;
     }
 
-    // --- MÉTODOS DE PERSONA ---
     public List<Persona> obtenerTodasLasPersonas() {
         return personaDAO.obtenerTodos();
     }
